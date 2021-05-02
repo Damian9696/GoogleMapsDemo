@@ -1,6 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">GoogleMapsDemo</string>
-    <string name="title_activity_maps">Map</string>
     <string name="normal_map">Normal map</string>
     <string name="hybrid_map">Hybrid map</string>
     <string name="satellite_map">Satellite map</string>
