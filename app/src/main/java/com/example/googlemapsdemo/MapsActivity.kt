@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import androidx.lifecycle.lifecycleScope
 import com.example.googlemapsdemo.misc.CameraAndViewPort
 import com.example.googlemapsdemo.misc.TypeAndStyle
 
@@ -15,6 +16,8 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.lang.Exception
 
 private const val TAG = "MapsActivity"
@@ -50,12 +53,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         // Add a marker in Sydney and move the camera
         val googleplex = LatLng(37.422081535716444, -122.0840910386807)
         map.addMarker(MarkerOptions().position(googleplex).title("Marker in Googleplex"))
-//        map.moveCamera(CameraUpdateFactory.newLatLng(sydney))
-        map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraAndViewPort.googleplex))
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(googleplex, 10f))
+//        map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraAndViewPort.googleplex))
         map.uiSettings.apply {
             isZoomControlsEnabled = true
         }
         typeAndStyle.setMapStyle(googleMap, this)
+
+        lifecycleScope.launch {
+            delay(4000L)
+            map.moveCamera(
+                CameraUpdateFactory.newLatLngBounds(
+                    cameraAndViewPort.googleplexBounds,
+                    0
+                )
+            )
+        }
     }
 
 
