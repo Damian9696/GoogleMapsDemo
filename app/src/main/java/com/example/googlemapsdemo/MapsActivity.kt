@@ -68,6 +68,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     0
                 )
             )
+            map.setLatLngBoundsForCameraTarget(cameraAndViewPort.googleplexBounds)
         }
     }
 
