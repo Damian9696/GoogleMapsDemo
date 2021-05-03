@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.example.googlemapsdemo.misc.CameraAndViewPort
 import com.example.googlemapsdemo.misc.TypeAndStyle
@@ -16,6 +17,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.lang.Exception
@@ -54,7 +56,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val googleplex = LatLng(37.422081535716444, -122.0840910386807)
         map.addMarker(MarkerOptions().position(googleplex).title("Marker in Googleplex"))
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(googleplex, 10f))
-//        map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraAndViewPort.googleplex))
         map.uiSettings.apply {
             isZoomControlsEnabled = true
         }
@@ -62,13 +63,26 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         lifecycleScope.launch {
             delay(4000L)
-            map.moveCamera(
-                CameraUpdateFactory.newLatLngBounds(
-                    cameraAndViewPort.googleplexBounds,
-                    0
-                )
+            map.animateCamera(
+                CameraUpdateFactory.newCameraPosition(cameraAndViewPort.googleplex),
+                2000,
+                object : GoogleMap.CancelableCallback {
+                    override fun onFinish() {
+                        Toast.makeText(this@MapsActivity, "Animation finished!", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+
+                    override fun onCancel() {
+                        Toast.makeText(
+                            this@MapsActivity,
+                            "Animation cancelled!",
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                    }
+
+                }
             )
-            map.setLatLngBoundsForCameraTarget(cameraAndViewPort.googleplexBounds)
         }
     }
 
