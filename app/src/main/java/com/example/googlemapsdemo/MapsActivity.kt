@@ -61,30 +61,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
         typeAndStyle.setMapStyle(googleMap, this)
 
-        lifecycleScope.launch {
-            delay(4000L)
-            map.animateCamera(
-                CameraUpdateFactory.newCameraPosition(cameraAndViewPort.googleplex),
-                2000,
-                object : GoogleMap.CancelableCallback {
-                    override fun onFinish() {
-                        Toast.makeText(this@MapsActivity, "Animation finished!", Toast.LENGTH_SHORT)
-                            .show()
-                    }
+        onMapSingleClicked()
+        onMapLongClicked()
+    }
 
-                    override fun onCancel() {
-                        Toast.makeText(
-                            this@MapsActivity,
-                            "Animation cancelled!",
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()
-                    }
-
-                }
-            )
+    private fun onMapSingleClicked() {
+        map.setOnMapClickListener {
+            Toast.makeText(this, "Map single click", Toast.LENGTH_SHORT).show()
         }
     }
 
+    private fun onMapLongClicked() {
+        map.setOnMapLongClickListener {
+            map.addMarker(
+                MarkerOptions().position(it).title("Marker in ${it.latitude} ${it.longitude}")
+            )
+        }
+    }
 
 }
