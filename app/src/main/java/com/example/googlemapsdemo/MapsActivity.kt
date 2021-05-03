@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import com.example.googlemapsdemo.misc.CameraAndViewPort
+import com.example.googlemapsdemo.misc.TypeAndStyle
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -20,6 +22,8 @@ private const val TAG = "MapsActivity"
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var map: GoogleMap
+    private val typeAndStyle by lazy { TypeAndStyle() }
+    private val cameraAndViewPort by lazy { CameraAndViewPort() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,13 +40,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.normal_map -> map.mapType = GoogleMap.MAP_TYPE_NORMAL
-            R.id.hybrid_map -> map.mapType = GoogleMap.MAP_TYPE_HYBRID
-            R.id.satellite_map -> map.mapType = GoogleMap.MAP_TYPE_SATELLITE
-            R.id.terrain_map -> map.mapType = GoogleMap.MAP_TYPE_TERRAIN
-            R.id.none_map -> map.mapType = GoogleMap.MAP_TYPE_NONE
-        }
+        typeAndStyle.setMapType(item, map)
         return super.onOptionsItemSelected(item)
     }
 
@@ -50,28 +48,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         map = googleMap
 
         // Add a marker in Sydney and move the camera
-        val sydney = LatLng(-34.0, 151.0)
-        map.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        map.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        val googleplex = LatLng(37.422081535716444, -122.0840910386807)
+        map.addMarker(MarkerOptions().position(googleplex).title("Marker in Googleplex"))
+//        map.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraAndViewPort.googleplex))
         map.uiSettings.apply {
             isZoomControlsEnabled = true
         }
-        setMapStyle(googleMap)
+        typeAndStyle.setMapStyle(googleMap, this)
     }
 
-    private fun setMapStyle(googleMap: GoogleMap) {
-        try {
-            val success = googleMap.setMapStyle(
-                MapStyleOptions.loadRawResourceStyle(
-                    this,
-                    R.raw.map_style
-                )
-            )
-            if (!success) {
-                Log.d(TAG, "Failed to apply style.")
-            }
-        } catch (e: Exception) {
-            Log.d(TAG, "setMapStyle: ${e.message.toString()}")
-        }
-    }
+
 }
