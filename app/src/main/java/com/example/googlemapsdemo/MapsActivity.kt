@@ -15,11 +15,8 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.googlemapsdemo.misc.CameraAndViewPort
 import com.example.googlemapsdemo.misc.TypeAndStyle
+import com.google.android.gms.maps.*
 
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.delay
@@ -28,7 +25,7 @@ import java.lang.Exception
 
 private const val TAG = "MapsActivity"
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private lateinit var map: GoogleMap
     private val typeAndStyle by lazy { TypeAndStyle() }
@@ -64,15 +61,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             MarkerOptions()
                 .position(googleplex)
                 .title("First Marker in Googleplex")
+                .snippet("Snippet for first Marker in Googleplex")
+
         )
 
         map.addMarker(
             MarkerOptions()
                 .position(googleplex2)
                 .title("Second Marker in Googleplex")
+                .snippet("Snippet for second Marker in Googleplex")
                 .zIndex(1f)
         )
-
+        map.setOnMarkerClickListener(this)
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(googleplex, 15f))
         map.uiSettings.apply {
             isZoomControlsEnabled = true
@@ -94,5 +94,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             drawable.draw(canvas)
             BitmapDescriptorFactory.fromBitmap(bitmap)
         } ?: BitmapDescriptorFactory.defaultMarker()
+    }
+
+    override fun onMarkerClick(marker: Marker?): Boolean {
+        marker?.let {
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(it.position, 17f), 2000, null)
+            it.showInfoWindow()
+        }
+        return true
     }
 }
