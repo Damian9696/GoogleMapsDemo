@@ -14,6 +14,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.googlemapsdemo.misc.CameraAndViewPort
+import com.example.googlemapsdemo.misc.CustomWindowAdapter
 import com.example.googlemapsdemo.misc.TypeAndStyle
 import com.google.android.gms.maps.*
 
@@ -25,11 +26,12 @@ import java.lang.Exception
 
 private const val TAG = "MapsActivity"
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var map: GoogleMap
     private val typeAndStyle by lazy { TypeAndStyle() }
     private val cameraAndViewPort by lazy { CameraAndViewPort() }
+    private val customWindowAdapter by lazy { CustomWindowAdapter(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,28 +57,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         // Add a marker in Sydney and move the camera
         val googleplex = LatLng(37.422081535716444, -122.0840910386807)
-        val googleplex2 = LatLng(37.42252861643644, -122.08530416260106)
 
         map.addMarker(
             MarkerOptions()
                 .position(googleplex)
                 .title("First Marker in Googleplex")
-                .snippet("Snippet for first Marker in Googleplex")
-
+                .snippet("First Marker in Googleplex")
         )
 
-        map.addMarker(
-            MarkerOptions()
-                .position(googleplex2)
-                .title("Second Marker in Googleplex")
-                .snippet("Snippet for second Marker in Googleplex")
-                .zIndex(1f)
-        )
-        map.setOnMarkerClickListener(this)
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(googleplex, 15f))
         map.uiSettings.apply {
             isZoomControlsEnabled = true
         }
+
+        map.setInfoWindowAdapter(customWindowAdapter)
         typeAndStyle.setMapStyle(googleMap, this)
     }
 
@@ -96,11 +90,4 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         } ?: BitmapDescriptorFactory.defaultMarker()
     }
 
-    override fun onMarkerClick(marker: Marker?): Boolean {
-        marker?.let {
-            map.animateCamera(CameraUpdateFactory.newLatLngZoom(it.position, 17f), 2000, null)
-            it.showInfoWindow()
-        }
-        return true
-    }
 }
