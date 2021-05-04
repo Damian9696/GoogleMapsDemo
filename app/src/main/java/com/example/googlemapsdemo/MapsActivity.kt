@@ -58,13 +58,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // Add a marker in Sydney and move the camera
         val googleplex = LatLng(37.422081535716444, -122.0840910386807)
+        val googleplex2 = LatLng(37.42252861643644, -122.08530416260106)
+
         map.addMarker(
             MarkerOptions()
                 .position(googleplex)
-                .title("Marker in Googleplex")
-                .icon(fromVectorToBitmap(R.drawable.ic_star, Color.parseColor("#FFFFFF")))
+                .title("First Marker in Googleplex")
         )
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(googleplex, 10f))
+
+        map.addMarker(
+            MarkerOptions()
+                .position(googleplex2)
+                .title("Second Marker in Googleplex")
+                .zIndex(1f)
+        )
+
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(googleplex, 15f))
         map.uiSettings.apply {
             isZoomControlsEnabled = true
         }
