@@ -16,6 +16,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.delay
@@ -24,7 +25,7 @@ import java.lang.Exception
 
 private const val TAG = "MapsActivity"
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerDragListener {
 
     private lateinit var map: GoogleMap
     private val typeAndStyle by lazy { TypeAndStyle() }
@@ -54,29 +55,26 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // Add a marker in Sydney and move the camera
         val googleplex = LatLng(37.422081535716444, -122.0840910386807)
-        map.addMarker(MarkerOptions().position(googleplex).title("Marker in Googleplex"))
+        val marker = map.addMarker(
+            MarkerOptions().position(googleplex).title("Marker in Googleplex").draggable(true)
+        )
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(googleplex, 10f))
         map.uiSettings.apply {
             isZoomControlsEnabled = true
         }
         typeAndStyle.setMapStyle(googleMap, this)
-
-        onMapSingleClicked()
-        onMapLongClicked()
+        map.setOnMarkerDragListener(this)
     }
 
-    private fun onMapSingleClicked() {
-        map.setOnMapClickListener {
-            Toast.makeText(this, "Map single click", Toast.LENGTH_SHORT).show()
-        }
+    override fun onMarkerDragStart(p0: Marker?) {
+        Log.d(TAG, "onMarkerDragStart")
     }
 
-    private fun onMapLongClicked() {
-        map.setOnMapLongClickListener {
-            map.addMarker(
-                MarkerOptions().position(it).title("Marker in ${it.latitude} ${it.longitude}")
-            )
-        }
+    override fun onMarkerDrag(p0: Marker?) {
+        Log.d(TAG, "onMarkerDrag")
     }
 
+    override fun onMarkerDragEnd(p0: Marker?) {
+        Log.d(TAG, "onMarkerDragEnd")
+    }
 }
