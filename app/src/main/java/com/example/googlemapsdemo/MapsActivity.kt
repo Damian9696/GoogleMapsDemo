@@ -78,8 +78,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         map.setInfoWindowAdapter(customWindowAdapter)
         typeAndStyle.setMapStyle(googleMap, this)
-
-        shapes.addPolygon()
+        shapes.addCircle()
     }
 
 
