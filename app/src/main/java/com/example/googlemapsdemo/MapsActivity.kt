@@ -15,6 +15,7 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.googlemapsdemo.misc.CameraAndViewPort
 import com.example.googlemapsdemo.misc.CustomWindowAdapter
+import com.example.googlemapsdemo.misc.Shapes
 import com.example.googlemapsdemo.misc.TypeAndStyle
 import com.google.android.gms.maps.*
 
@@ -37,6 +38,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private val typeAndStyle by lazy { TypeAndStyle() }
     private val cameraAndViewPort by lazy { CameraAndViewPort() }
     private val customWindowAdapter by lazy { CustomWindowAdapter(this) }
+    private val shapes by lazy { Shapes(map) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,24 +78,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         map.setInfoWindowAdapter(customWindowAdapter)
         typeAndStyle.setMapStyle(googleMap, this)
-        addPolyline()
+
+        shapes.addPolygon()
     }
 
-    private fun addPolyline() {
-        map.addPolyline(
-            PolylineOptions().apply {
-                add(
-                    googleplex,
-                    columbia,
-                    portugalia,
-                    poland,
-                    googleplex
-                )
-                width(5f)
-                color(Color.RED)
-                geodesic(true)
-            }
-        )
-    }
 
 }
