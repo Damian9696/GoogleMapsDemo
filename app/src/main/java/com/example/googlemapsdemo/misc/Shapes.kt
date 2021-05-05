@@ -3,10 +3,7 @@ package com.example.googlemapsdemo.misc
 import android.graphics.Color
 import com.example.googlemapsdemo.R
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.CircleOptions
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.PolygonOptions
-import com.google.android.gms.maps.model.PolylineOptions
+import com.google.android.gms.maps.model.*
 
 private val googleplex = LatLng(37.422081535716444, -122.0840910386807)
 private val columbia = LatLng(3.455821127923707, -73.22468585007239)
@@ -27,6 +24,9 @@ private val p7 = LatLng(37.42214406274038, -122.0849773112043)
 class Shapes(private val map: GoogleMap) {
 
     fun addPolyline() {
+
+//        val pattern = listOf(Dot(), Gap(20f), Dash(20f), Gap(20f),)
+
         map.addPolyline(
             PolylineOptions().apply {
                 add(
@@ -36,9 +36,13 @@ class Shapes(private val map: GoogleMap) {
                     poland,
                     googleplex
                 )
-                width(5f)
+                width(120f)
                 color(Color.RED)
                 geodesic(true)
+//                pattern(pattern)
+                jointType(JointType.ROUND)
+                startCap(RoundCap())
+                endCap(RoundCap())
             }
         )
     }
