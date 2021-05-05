@@ -28,6 +28,11 @@ private const val TAG = "MapsActivity"
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
+    private val googleplex = LatLng(37.422081535716444, -122.0840910386807)
+    private val columbia = LatLng(3.455821127923707, -73.22468585007239)
+    private val portugalia = LatLng(37.947391893928014, -8.372567250174345)
+    private val poland = LatLng(52.86029781554506, 17.966512331809508)
+
     private lateinit var map: GoogleMap
     private val typeAndStyle by lazy { TypeAndStyle() }
     private val cameraAndViewPort by lazy { CameraAndViewPort() }
@@ -56,7 +61,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         map = googleMap
 
         // Add a marker in Sydney and move the camera
-        val googleplex = LatLng(37.422081535716444, -122.0840910386807)
 
         map.addMarker(
             MarkerOptions()
@@ -65,29 +69,31 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 .snippet("First Marker in Googleplex")
         )
 
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(googleplex, 15f))
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(googleplex, 17f))
         map.uiSettings.apply {
             isZoomControlsEnabled = true
         }
 
         map.setInfoWindowAdapter(customWindowAdapter)
         typeAndStyle.setMapStyle(googleMap, this)
+        addPolyline()
     }
 
-    private fun fromVectorToBitmap(vectorId: Int, vectorColor: Int): BitmapDescriptor {
-        val vectorDrawable: Drawable? = ResourcesCompat.getDrawable(resources, vectorId, null)
-        return vectorDrawable?.let { drawable ->
-            val bitmap = Bitmap.createBitmap(
-                drawable.intrinsicWidth,
-                drawable.intrinsicHeight,
-                Bitmap.Config.ARGB_8888
-            )
-            val canvas = Canvas(bitmap)
-            drawable.setBounds(0, 0, canvas.width, canvas.height)
-            DrawableCompat.setTint(drawable, vectorColor)
-            drawable.draw(canvas)
-            BitmapDescriptorFactory.fromBitmap(bitmap)
-        } ?: BitmapDescriptorFactory.defaultMarker()
+    private fun addPolyline() {
+        map.addPolyline(
+            PolylineOptions().apply {
+                add(
+                    googleplex,
+                    columbia,
+                    portugalia,
+                    poland,
+                    googleplex
+                )
+                width(5f)
+                color(Color.RED)
+                geodesic(true)
+            }
+        )
     }
 
 }
