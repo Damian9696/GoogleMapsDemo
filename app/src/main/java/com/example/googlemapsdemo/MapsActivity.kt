@@ -13,10 +13,7 @@ import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.lifecycle.lifecycleScope
-import com.example.googlemapsdemo.misc.CameraAndViewPort
-import com.example.googlemapsdemo.misc.CustomWindowAdapter
-import com.example.googlemapsdemo.misc.Shapes
-import com.example.googlemapsdemo.misc.TypeAndStyle
+import com.example.googlemapsdemo.misc.*
 import com.google.android.gms.maps.*
 
 import com.google.android.gms.maps.model.*
@@ -39,6 +36,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private val cameraAndViewPort by lazy { CameraAndViewPort() }
     private val customWindowAdapter by lazy { CustomWindowAdapter(this) }
     private val shapes by lazy { Shapes(map) }
+    private val overlays by lazy { Overlays(map) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,7 +76,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         map.setInfoWindowAdapter(customWindowAdapter)
         typeAndStyle.setMapStyle(googleMap, this)
-        shapes.addPolyline()
+        overlays.addGroundOverlay(resources)
     }
 
 

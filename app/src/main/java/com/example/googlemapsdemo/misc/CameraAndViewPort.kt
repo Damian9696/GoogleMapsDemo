@@ -13,9 +13,4 @@ class CameraAndViewPort {
             .bearing(300f)
             .tilt(45f)
             .build()
-
-    val googleplexBounds = LatLngBounds(
-        LatLng(37.421162527747384, -122.08657206936668),
-        LatLng(37.423133354865485, -122.08121336977322)
-    )
 }
